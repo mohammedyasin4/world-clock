@@ -1,0 +1,22 @@
+[
+  { "name": "New York",       "timezone": "America/New_York",      "country": "USA" },
+  { "name": "Los Angeles",    "timezone": "America/Los_Angeles",   "country": "USA" },
+  { "name": "London",         "timezone": "Europe/London",         "country": "UK" },
+  { "name": "Paris",          "timezone": "Europe/Paris",          "country": "France" },
+  { "name": "Berlin",         "timezone": "Europe/Berlin",         "country": "Germany" },
+  { "name": "Moscow",         "timezone": "Europe/Moscow",         "country": "Russia" },
+  { "name": "Dubai",          "timezone": "Asia/Dubai",            "country": "UAE" },
+  { "name": "Mumbai",         "timezone": "Asia/Kolkata",          "country": "India" },
+  { "name": "Beijing",        "timezone": "Asia/Shanghai",         "country": "China" },
+  { "name": "Tokyo",          "timezone": "Asia/Tokyo",            "country": "Japan" },
+  { "name": "Singapore",      "timezone": "Asia/Singapore",        "country": "Singapore" },
+  { "name": "Sydney",         "timezone": "Australia/Sydney",      "country": "Australia" },
+  { "name": "Auckland",       "timezone": "Pacific/Auckland",      "country": "New Zealand" },
+  { "name": "Honolulu",       "timezone": "Pacific/Honolulu",      "country": "USA" },
+  { "name": "Rio de Janeiro", "timezone": "America/Sao_Paulo",     "country": "Brazil" },
+  { "name": "Cairo",          "timezone": "Africa/Cairo",          "country": "Egypt" },
+  { "name": "Cape Town",      "timezone": "Africa/Johannesburg",   "country": "South Africa" },
+  { "name": "Chicago",        "timezone": "America/Chicago",       "country": "USA" },
+  { "name": "Toronto",        "timezone": "America/Toronto",       "country": "Canada" },
+  { "name": "Bangkok",        "timezone": "Asia/Bangkok",          "country": "Thailand" }
+]
