@@ -1,46 +1,32 @@
-# Getting Started with Create React App
+# World Clock
+## Project beskrivning
+projektet är en världsklocka byggd med React och TypeScript. Applikationen låter användaren hålla reda på lokal tid i olika städer runt om i världen. Man kan välja städer från en färdig lista eller lägga till egna städer med tidszoner. Varje stad kan visas digitalt och sparas i localStorage så att de kommer tillbaka när sidan laddas igen. Webbplatsen är responsiv och fungerar på olika skärmstorlekar.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Funktioner
+* Lägg till en stad från en lista med vanliga städer eller ange en egen stad och tidszon.
+* Visa tiden digitalt (HH:MM:SS)
+* Valda städer sparas i webbläsarens localStorage, vilket behåller data även när man laddar om webbläsaren.
+* Responsiv design som fungerar på mobil, surfplatta och desktop.
 
-## Available Scripts
+## Installation
+* Clone repository and install dependencies
 
-In the project directory, you can run:
+``` Bash
+git clone
+cd
+npm install
+```
+* Start server
+``` Bash
+npm start
+```
+## Kodstruktur
+* App tsx: Huvudkomponenten laddar in sparade städer från localStorage vid start och uppdaterar lagringen när användarlistan ändras.
+* HomePage.tsx: Startsidan där användaren lägger till eller tar bort städer. Den använder selectedCities och availableCities samt visar digitala tider med toLocaleTimeString.
+* types.ts: Definierar City-interface och ClockSettings med sträng-literaltyper för tidszoner.
+* cityTimezones.json: JSON-fil med fördefinierade städer, tidszoner och länder.
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## User stories
+* Som användare vill jag kunna lägga till en stad från en lista för att snabbt se tiden i en vanlig storstad.
+* Som användare vill jag att mina valda städer sparas mellan besök så att jag slipper välja dem varje gång.
+* Som användare vill jag kunna ange min egen stad och tidszon för att kunna följa tiden i mindre orter.
