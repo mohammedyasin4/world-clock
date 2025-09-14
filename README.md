@@ -30,3 +30,4 @@ npm start
 * Som användare vill jag kunna lägga till en stad från en lista för att snabbt se tiden i en vanlig storstad.
 * Som användare vill jag att mina valda städer sparas mellan besök så att jag slipper välja dem varje gång.
 * Som användare vill jag kunna ange min egen stad och tidszon för att kunna följa tiden i mindre orter.
+## Sketch:<img width="709" height="506" alt="Screenshot 2025-09-13 150402" src="https://github.com/user-attachments/assets/a0253420-6104-4350-9801-7ea1a5487cce" />
