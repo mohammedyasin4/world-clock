@@ -1,118 +1,136 @@
 // HomePage.tsx
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { City } from '../types';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import type { City } from "../types";
 
 interface HomePageProps {
-  availableCities: City[];         // list of all predefined city options
-  selectedCities: City[];          // list of cities currently added by user
-  onAddCity: (city: City) => void;
-  onRemoveCity: (cityName: string) => void;
+  availableCities: City[];                // Förvalda städer (från JSON)
+  selectedCities: City[];                 // Städer som användaren har lagt till
+  onAddCity: (city: City) => void;        // Lägg till stad
+  onRemoveCity: (cityName: string) => void; // Ta bort stad (via namn)
 }
 
-const HomePage: React.FC<HomePageProps> = ({ availableCities, selectedCities, onAddCity, onRemoveCity }) => {
-  // State to hold the selected option from dropdown
-  const [selectedOption, setSelectedOption] = useState<string>("");
+const HomePage: React.FC<HomePageProps> = ({
+  availableCities,
+  selectedCities,
+  onAddCity,
+  onRemoveCity,
+}) => {
+  // Dropdown-val: välj första staden om det finns någon, annars fallback
+  const [valdTidszon, setValdTidszon] = useState<string>(
+    availableCities[0]?.timezone ?? "Europe/Stockholm"
+  );
 
-  // For custom city inputs:
-  const [customName, setCustomName] = useState<string>("");
-  const [customTZ, setCustomTZ] = useState<string>("");
+  // Fält för egen stad (manuell inmatning)
+  const [egenStad, setEgenStad] = useState<string>("");
+  const [egenTidszon, setEgenTidszon] = useState<string>("");
 
-  // Effect to default dropdown selection (optional: e.g., first city in list)
+  // Enkel klock-tick för att rita om komponenten varje sekund (så tider uppdateras)
+  const [tick, setTick] = useState<number>(0);
   useEffect(() => {
-    if (availableCities.length > 0) {
-      setSelectedOption(availableCities[0].timezone);
-    }
-  }, [availableCities]);
-
-  const handleAddPredefined = () => {
-    if (!selectedOption) return;
-    // Find the City object by timezone or name in availableCities
-    const city = availableCities.find(c => c.timezone === selectedOption);
-    if (city) {
-      onAddCity(city);
-    }
-  };
-
-  const handleAddCustom = () => {
-    if (!customName || !customTZ) return;
-    const newCity: City = { name: customName, timezone: customTZ };
-    onAddCity(newCity);
-    // Reset custom inputs
-    setCustomName("");
-    setCustomTZ("");
-  };
-
-  // Function to get current time string for a given timezone (digital display)
-  const getTimeString = (tz: string) => {
-    const now = new Date();
-    // Format time in that timezone as HH:MM:SS (or HH:MM if you prefer)
-    return now.toLocaleTimeString(undefined, { timeZone: tz, hour12: false });
-  };
-
-  // We will use an interval to trigger re-renders every second
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      // Force re-render by updating state (could use a dummy state if needed)
-    }, 1000);
-    return () => clearInterval(intervalId);
+    const id = setInterval(() => setTick((t) => t + 1), 1000);
+    return () => clearInterval(id);
   }, []);
-  // (If you want to force re-render, you can use a dummy state or forceUpdate pattern)
+  // (tick används inte direkt, den finns bara för att trigga omritning)
+
+  // Hämta aktuell tid (HH:MM:SS) för en viss tidszon
+  const getTid = (tz: string): string => {
+    const nu = new Date();
+    return nu.toLocaleTimeString(undefined, { timeZone: tz, hour12: false });
+  };
+
+  // Lägg till förvald stad från listan
+  const läggTillFörvald = () => {
+    if (!valdTidszon) return;
+    const stad = availableCities.find((c) => c.timezone === valdTidszon);
+    if (!stad) return;
+    onAddCity(stad);
+  };
+
+  // Lägg till egen stad (namn + tidszon)
+  const läggTillEgen = () => {
+    if (!egenStad.trim() || !egenTidszon.trim()) return;
+    const ny: City = { name: egenStad.trim(), timezone: egenTidszon.trim() };
+    onAddCity(ny);
+    setEgenStad("");
+    setEgenTidszon("");
+  };
 
   return (
     <div className="home-page">
-      <h1>World Clock</h1>
+      <h1>Världsklocka</h1>
 
-      {/* Add City Section */}
+      {/* Sektion: lägg till stad */}
       <div className="add-city">
-        <h2>Add a City</h2>
-        {/* Option 1: Select from common cities */}
+        <h2>Lägg till stad</h2>
+
+        {/* Alternativ 1: välj från lista */}
         <div>
-          <select value={selectedOption} onChange={e => setSelectedOption(e.target.value)}>
-            {availableCities.map(city => (
-              <option key={city.timezone} value={city.timezone}>
-                {city.name} ({city.timezone})
-              </option>
-            ))}
-          </select>
-          <button onClick={handleAddPredefined}>Add City</button>
+          <label>
+            Välj från lista:&nbsp;
+            <select
+              value={valdTidszon}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setValdTidszon(e.target.value)
+              }
+            >
+              {availableCities.map((city) => (
+                <option key={city.timezone} value={city.timezone}>
+                  {city.name} ({city.timezone})
+                </option>
+              ))}
+            </select>
+          </label>
+          <button onClick={läggTillFörvald}>Lägg till</button>
         </div>
-        <p>— OR —</p>
-        {/* Option 2: Add custom city */}
+
+        <p style={{ margin: "8px 0" }}>— eller —</p>
+
+        {/* Alternativ 2: lägg till egen stad */}
         <div>
-          <input 
-            type="text" 
-            placeholder="City Name" 
-            value={customName} 
-            onChange={e => setCustomName(e.target.value)} 
+          <input
+            type="text"
+            placeholder="Stadens namn"
+            value={egenStad}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEgenStad(e.target.value)
+            }
           />
-          <input 
-            type="text" 
-            placeholder="Time Zone (e.g. Continent/City)" 
-            value={customTZ} 
-            onChange={e => setCustomTZ(e.target.value)} 
+          <input
+            type="text"
+            placeholder="Tidszon (t.ex. Europe/Stockholm)"
+            value={egenTidszon}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEgenTidszon(e.target.value)
+            }
           />
-          <button onClick={handleAddCustom}>Add Custom City</button>
+          <button onClick={läggTillEgen}>Lägg till egen stad</button>
         </div>
       </div>
 
-      {/* Selected Cities List */}
-      <div className="city-list">
-        <h2>Your Cities</h2>
+      {/* Lista: valda städer */}
+      <div className="city-list" style={{ marginTop: 24 }}>
+        <h2>Dina städer</h2>
+
         {selectedCities.length === 0 ? (
-          <p>No cities added yet.</p>
+          <p>Inga städer tillagda ännu.</p>
         ) : (
           <ul>
-            {selectedCities.map(city => (
+            {selectedCities.map((city) => (
               <li key={city.name}>
-                {/* City name with link to detail page */}
+                {/* Stadens namn länkar till detaljsidan */}
                 <Link to={`/city/${encodeURIComponent(city.name)}`}>
                   {city.name}
                 </Link>
                 {" – "}
-                <span>{ getTimeString(city.timezone) }</span>
+                <span>{getTid(city.timezone)}</span>
                 {" "}
-                <button onClick={() => onRemoveCity(city.name)}>✕</button>
+                <button
+                  aria-label={`Ta bort ${city.name}`}
+                  onClick={() => onRemoveCity(city.name)}
+                >
+                  ✕
+                </button>
               </li>
             ))}
           </ul>

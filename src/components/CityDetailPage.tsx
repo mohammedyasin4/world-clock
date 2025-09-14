@@ -1,68 +1,67 @@
 // CityDetailPage.tsx
-import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { City } from '../types';
-import Clock from 'react-clock';  // analog clock component
-import 'react-clock/dist/Clock.css';  // import default styles for the clock
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import type { City } from "../types";
+import Clock from "react-clock";        // analog klocka
+import "react-clock/dist/Clock.css";    // standardstilar för klockan
 
 interface CityDetailPageProps {
-  cities: City[];  // list of all cities (to find the one to display)
+  cities: City[];   // Lista med städer att leta i
 }
 
 const CityDetailPage: React.FC<CityDetailPageProps> = ({ cities }) => {
-  const { name } = useParams();  // grab the city name from URL
-  const [city, setCity] = useState<City | undefined>(undefined);
+  const { name } = useParams(); // Hämtar stadens namn från URL
+  const [stad, setStad] = useState<City | undefined>(undefined);
 
-  // Find the city by name whenever the URL param changes or cities list changes
+  // Hitta rätt stad när sidan laddas eller URL ändras
   useEffect(() => {
-    const found = cities.find(c => c.name.toLowerCase() === (name || "").toLowerCase());
-    setCity(found);
+    const funnen = cities.find(
+      (c) => c.name.toLowerCase() === (name || "").toLowerCase()
+    );
+    setStad(funnen);
   }, [name, cities]);
 
-  // State for current time in that city (as a Date object for analog clock)
-  const [cityTime, setCityTime] = useState<Date>(new Date());
-  
-  useEffect(() => {
-    if (!city) return;
-    // Function to update cityTime state to current time in that timezone
-    const updateCityTime = () => {
-      const now = new Date();
-      // Convert current time to the city's local time 
-      const localeString = now.toLocaleString("en-US", { timeZone: city.timezone });
-      const timeInCity = new Date(localeString);
-      setCityTime(timeInCity);
-    };
-    // Initial call and then interval
-    updateCityTime();
-    const intervalId = setInterval(updateCityTime, 1000);
-    return () => clearInterval(intervalId);
-  }, [city]);
+  // Tid i vald stad (används för både digital och analog visning)
+  const [stadTid, setStadTid] = useState<Date>(new Date());
 
-  if (!city) {
+  useEffect(() => {
+    if (!stad) return;
+
+    const uppdateraTid = () => {
+      const nu = new Date();
+      // Gör om tiden till rätt tidszon
+      const lokalStr = nu.toLocaleString("en-US", { timeZone: stad.timezone });
+      setStadTid(new Date(lokalStr));
+    };
+
+    uppdateraTid(); // kör direkt
+    const id = setInterval(uppdateraTid, 1000); // uppdatera varje sekund
+    return () => clearInterval(id);
+  }, [stad]);
+
+  // Om ingen stad hittas
+  if (!stad) {
     return (
       <div className="city-detail">
-        <p>City not found.</p>
-        <Link to="/">Back to Home</Link>
+        <p>Staden kunde inte hittas.</p>
+        <Link to="/">Tillbaka</Link>
       </div>
     );
   }
 
   return (
-    <div className="city-detail" style={{ textAlign: 'center', padding: '20px' }}>
-      <h1>{city.name}</h1>
-      {city.country && <h2>{city.country}</h2>}
-      <h3>{city.timezone}</h3>
+    <div className="city-detail" style={{ textAlign: "center", padding: "20px" }}>
+      <h1>{stad.name}</h1>
+      {stad.country && <h2>{stad.country}</h2>}
+      <h3>{stad.timezone}</h3>
 
-      {/* Analog Clock Display */}
-      <div className="clock-container" style={{ margin: '20px 0' }}>
-        <Clock value={cityTime} size={200} />  {/* size prop to control clock diameter (px) */}
-      </div>
+   
 
-      {/* Digital time and date for reference */}
-      <p>Local time in {city.name}: {cityTime.toLocaleTimeString(undefined, { hour12: false })}</p>
-      <p>Date: {cityTime.toLocaleDateString()}</p>
+      {/* Digital tid + datum */}
+      <p>Lokal tid: {stadTid.toLocaleTimeString(undefined, { hour12: false })}</p>
+      <p>Datum: {stadTid.toLocaleDateString()}</p>
 
-      <Link to="/">← Back to all cities</Link>
+      <Link to="/">← Tillbaka till alla städer</Link>
     </div>
   );
 };
